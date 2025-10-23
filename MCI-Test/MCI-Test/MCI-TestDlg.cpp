@@ -13,6 +13,7 @@
 #endif
 
 
+
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
@@ -65,6 +66,7 @@ BEGIN_MESSAGE_MAP(CMCITestDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, &CMCITestDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -153,3 +155,16 @@ HCURSOR CMCITestDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+void CMCITestDlg::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+
+	static CMCIObject mci;
+
+	mci.OpenFile(L"vid.avi");
+
+	//mci.SetVideoPosition(GetSafeHwnd(), CRect(30, 60, 210, 140));
+
+	mci.Play();
+}
