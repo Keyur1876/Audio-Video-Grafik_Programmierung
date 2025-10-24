@@ -163,7 +163,7 @@ void CMCITestDlg::OnBnClickedVideo()
 
 	static CMCIObject mci;
 
-	mci.OpenFile(L"video.mpeg");
+	mci.OpenFile(L"test.mpg");
 
 	//mci.SetVideoPosition(GetSafeHwnd(), CRect(30, 60, 210, 140));
 
