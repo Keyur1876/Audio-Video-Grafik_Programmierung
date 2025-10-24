@@ -66,7 +66,8 @@ BEGIN_MESSAGE_MAP(CMCITestDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &CMCITestDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON1, &CMCITestDlg::OnBnClickedVideo)
+	ON_BN_CLICKED(IDC_BUTTON2, &CMCITestDlg::OnBnClickedAudioMp3)
 END_MESSAGE_MAP()
 
 
@@ -156,15 +157,25 @@ HCURSOR CMCITestDlg::OnQueryDragIcon()
 }
 
 
-void CMCITestDlg::OnBnClickedButton1()
+void CMCITestDlg::OnBnClickedVideo()
 {
 	// TODO: Add your control notification handler code here
 
 	static CMCIObject mci;
 
-	mci.OpenFile(L"vid.avi");
+	mci.OpenFile(L"video.mpeg");
 
 	//mci.SetVideoPosition(GetSafeHwnd(), CRect(30, 60, 210, 140));
+
+	mci.Play();
+}
+
+
+void CMCITestDlg::OnBnClickedAudioMp3()
+{
+	static CMCIObject mci;
+
+	mci.OpenFile(L"test.mp3");
 
 	mci.Play();
 }

@@ -42,22 +42,17 @@ bool CMCIObject::OpenAudioCD(LPCWSTR drive, BYTE &tracks)
 
 bool CMCIObject::OpenFile(LPCWSTR pszFileName)
 {
-	if (m_op.wDeviceID != 0)
-	{
+	if (m_op.wDeviceID != 0) 
 		Close();
-	}
 	m_op.lpstrDeviceType = 0;
 	m_op.lpstrElementName = pszFileName;
-
-	if((m_Result = mciSendCommandA(0, MCI_OPEN, MCI_OPEN_ELEMENT , (DWORD_PTR)&m_op)) != 0)
-	{
+	if ((m_Result = mciSendCommand(0,
+		MCI_OPEN, MCI_OPEN_ELEMENT, (DWORD_PTR)&m_op)) != 0) {
 		MCIError();
 		return false;
 	}
-
-	// wird noch erweitert ...........
-
-	return true;
+	// wird später hier erweitert
+		return true;
 }
 
 void CMCIObject::Close()
@@ -107,6 +102,19 @@ void CMCIObject::Pause()
 		MCIError();
 	}
 }
+
+/*
+void CMCIOject::MCIError()
+{
+	char buf[512];
+	buf[0] = '\0';
+	mciGetErrorString(m_Result, (LPWSTR)buf, sizeof(buf));
+	if (!strlen(buf))
+		strcpy(buf, "Unknown error");
+	AfxMessageBox((LPCWSTR)buf);
+	m_op.wDeviceID = 0;
+}
+*/
 
 void CMCIObject::MCIError()
 {
