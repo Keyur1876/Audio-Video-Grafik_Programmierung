@@ -131,3 +131,8 @@ void CMCIObject::MCIError()
 	AfxMessageBox(wbuf);
 	m_op.wDeviceID = 0;
 }
+
+bool SetVideoPosition(HWND hwnd, CRect rect)
+{
+
+}
