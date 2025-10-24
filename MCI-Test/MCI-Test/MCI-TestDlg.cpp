@@ -68,6 +68,8 @@ BEGIN_MESSAGE_MAP(CMCITestDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMCITestDlg::OnBnClickedVideo)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMCITestDlg::OnBnClickedAudioMp3)
+	ON_BN_CLICKED(IDC_BUTTON3, &CMCITestDlg::OnBnClickedAudioMid)
+	ON_BN_CLICKED(IDC_BUTTON5, &CMCITestDlg::OnBnClickedAudioCD)
 END_MESSAGE_MAP()
 
 
@@ -161,8 +163,6 @@ void CMCITestDlg::OnBnClickedVideo()
 {
 	// TODO: Add your control notification handler code here
 
-	static CMCIObject mci;
-
 	mci.OpenFile(L"test.mpg");
 
 	//mci.SetVideoPosition(GetSafeHwnd(), CRect(30, 60, 210, 140));
@@ -173,9 +173,22 @@ void CMCITestDlg::OnBnClickedVideo()
 
 void CMCITestDlg::OnBnClickedAudioMp3()
 {
-	static CMCIObject mci;
-
 	mci.OpenFile(L"test.mp3");
 
+	mci.Play();
+}
+
+
+void CMCITestDlg::OnBnClickedAudioMid()
+{
+	mci.OpenFile(L"canyon.mid");
+	mci.Play();
+}
+
+
+void CMCITestDlg::OnBnClickedAudioCD()
+{
+	BYTE tracks;
+	mci.OpenAudioCD(L"D:", tracks);
 	mci.Play();
 }

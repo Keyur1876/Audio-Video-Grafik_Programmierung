@@ -20,6 +20,7 @@ public:
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
+	CMCIObject mci;
 
 
 // Implementation
@@ -35,4 +36,6 @@ protected:
 public:
 	afx_msg void OnBnClickedVideo();
 	afx_msg void OnBnClickedAudioMp3();
+	afx_msg void OnBnClickedAudioMid();
+	afx_msg void OnBnClickedAudioCD();
 };
