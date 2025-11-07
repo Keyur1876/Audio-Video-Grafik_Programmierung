@@ -38,4 +38,10 @@ public:
 	afx_msg void OnBnClickedAudioMp3();
 	afx_msg void OnBnClickedAudioMid();
 	afx_msg void OnBnClickedAudioCD();
+	afx_msg void OnBnClickedClose();
+	afx_msg void OnBnClickedPlay();
+	afx_msg void OnBnClickedPause();
+	afx_msg void OnBnClickedExit();
+	afx_msg void OnLbnSelchangeList1();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };

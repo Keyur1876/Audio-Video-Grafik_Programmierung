@@ -70,6 +70,12 @@ BEGIN_MESSAGE_MAP(CMCITestDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMCITestDlg::OnBnClickedAudioMp3)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMCITestDlg::OnBnClickedAudioMid)
 	ON_BN_CLICKED(IDC_BUTTON5, &CMCITestDlg::OnBnClickedAudioCD)
+	ON_BN_CLICKED(IDC_BUTTON8, &CMCITestDlg::OnBnClickedClose)
+	ON_BN_CLICKED(IDC_BUTTON6, &CMCITestDlg::OnBnClickedPlay)
+	ON_BN_CLICKED(IDC_BUTTON7, &CMCITestDlg::OnBnClickedPause)
+	ON_BN_CLICKED(IDC_BUTTON9, &CMCITestDlg::OnBnClickedExit)
+	ON_LBN_SELCHANGE(IDC_LIST1, &CMCITestDlg::OnLbnSelchangeList1)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -105,7 +111,7 @@ BOOL CMCITestDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-
+	SetTimer(1, 200, 0);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -163,11 +169,14 @@ void CMCITestDlg::OnBnClickedVideo()
 {
 	// TODO: Add your control notification handler code here
 
+	CRect r;
+	GetDlgItem(IDC_DESTIN)->GetWindowRect(r); //Ignore this Error
+	ScreenToClient(r);
 	mci.OpenFile(L"test.mpg");
-
-	//mci.SetVideoPosition(GetSafeHwnd(), CRect(30, 60, 210, 140));
-
+	mci.SetVideoPosition(GetSafeHwnd(),
+		CRect(r.left, r.top, r.Width(), r.Height()));
 	mci.Play();
+	//SetDlgItemText(IDC_BtnPlayPause2, L"Pause");
 }
 
 
@@ -189,6 +198,79 @@ void CMCITestDlg::OnBnClickedAudioMid()
 void CMCITestDlg::OnBnClickedAudioCD()
 {
 	BYTE tracks;
-	mci.OpenAudioCD(L"D:", tracks);
+	mci.OpenAudioCD(L"D:", tracks); // set as 0 if there is only on CD drive avaliable
+
+	BYTE min, sek, frame;
+	((CListBox*)GetDlgItem(IDC_LIST1))->ResetContent();
+	RedrawWindow();
+	for (int i = 1; i <= tracks; i++) {
+		mci.GetTrackLength(i, min, sek, frame);
+		CString temp; // z.B.Eintrag in eine ListBox : -)
+		temp.Format(L"[%02d] %02d:%02d", i, min, sek);
+		((CListBox*)GetDlgItem(IDC_LIST1))->AddString(temp);
+	}
+
+	//mci.TMSFSeek(2, 0, 0, 0);
 	mci.Play();
+}
+
+void CMCITestDlg::OnBnClickedClose()
+{
+	// TODO: Add your control notification handler code here
+	mci.Close();
+}
+
+void CMCITestDlg::OnBnClickedPlay()
+{
+	// TODO: Add your control notification handler code here
+	mci.Play();
+}
+
+void CMCITestDlg::OnBnClickedPause()
+{
+	// TODO: Add your control notification handler code here
+	mci.Pause();
+}
+
+void CMCITestDlg::OnBnClickedExit()
+{
+	// TODO: Add your control notification handler code here
+
+}
+
+void CMCITestDlg::OnLbnSelchangeList1()
+{
+	// TODO: Add your control notification handler code here
+	mci.TMSFSeek(((CListBox*)GetDlgItem(IDC_LIST1))->GetCurSel() + 1, 0, 0, 0);
+	mci.Play();
+	//mci.Pause();
+}
+
+void CMCITestDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+	// Abfrage des Abspielstands
+	CString str;
+	unsigned char t, m, s, f;
+	mci.GetTMSFPosition(t, m, s, f);
+	int akt = m * 60 + s;
+
+	// Abfrage der Trackinformationen
+	BYTE min, sek, frame;
+	mci.GetTrackLength(t, min, sek, frame);
+	int ges = min * 60 + sek;
+
+	// Berechnen des Fortschritts
+	int progress;
+	if (ges > 0) {
+		progress = 100 * akt / ges;
+	}
+	else {
+		progress = 0;
+	}
+
+	str.Format(L"[%02d] %02d:%02d - %d%%", t, m, s, progress);
+	SetDlgItemText(IDC_TIME, str);
+
+	CDialogEx::OnTimer(nIDEvent);
 }
